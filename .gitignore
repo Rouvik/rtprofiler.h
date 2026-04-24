@@ -1,0 +1,7 @@
+# Ignore bin
+bin/
+
+# Ignore miscellanous
+Makefile
+Doxyfile
+main.c
