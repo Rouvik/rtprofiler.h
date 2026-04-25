@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rouviks_20tiny_20benchmarking_20library_0',['RTBench - Rouviks Tiny Benchmarking Library',['../index.html',1,'']]],
-  ['rtbench_20rouviks_20tiny_20benchmarking_20library_1',['RTBench - Rouviks Tiny Benchmarking Library',['../index.html',1,'']]],
-  ['rtbench_2eh_2',['rtbench.h',['../rtbench_8h.html',1,'']]]
+  ['macros_0',['Configuration Macros',['../config_macros.html',1,'']]],
+  ['measure_5ft_1',['MEASURE_T',['../rtbench_8h.html#a26a198fac7f2876b72bd425f9c8e1965',1,'rtbench.h']]]
 ];

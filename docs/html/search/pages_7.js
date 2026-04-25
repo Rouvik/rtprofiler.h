@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['usage_3a_0',['Usage:',['../index.html#autotoc_md1',1,'']]]
+  ['macros_0',['Configuration Macros',['../config_macros.html',1,'']]]
 ];

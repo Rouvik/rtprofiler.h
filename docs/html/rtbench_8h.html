@@ -114,6 +114,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:a7cf2dc1c0fe75c3f66043e097bf9e2ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper condition to check if there is a memory leak in heap, works by checking if BENCH_HEAP_CURRENT != 0 after all frees, non zero indicates that some memory was not freed. <br /></td></tr>
 <tr class="memitem:a26a198fac7f2876b72bd425f9c8e1965" id="r_a26a198fac7f2876b72bd425f9c8e1965"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a26a198fac7f2876b72bd425f9c8e1965">MEASURE_T</a>(avg_count, ...)</td></tr>
 <tr class="memdesc:a26a198fac7f2876b72bd425f9c8e1965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measures the time required for a code to run within the block averaged over avg_count iterations, also takes an optional argument to add in a value in naming to prevent duplicates in code and differentiate between multiple measurements within the same bench.  <br /></td></tr>
+<tr class="memitem:a68ad8768c69d0f1956af9bd04373d5cb" id="r_a68ad8768c69d0f1956af9bd04373d5cb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a68ad8768c69d0f1956af9bd04373d5cb">T_VAL</a>(...)</td></tr>
+<tr class="memdesc:a68ad8768c69d0f1956af9bd04373d5cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper macro used to get the time variable generated from a measurement.  <br /></td></tr>
 <tr class="memitem:aef5e118a32909aeb4339d934f7d661e8" id="r_aef5e118a32909aeb4339d934f7d661e8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aef5e118a32909aeb4339d934f7d661e8">BENCH</a>(start_size,  end_size,  incr)</td></tr>
 <tr class="memdesc:aef5e118a32909aeb4339d934f7d661e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main loop to run bench marks over a set of samples, the samples are generated using the system provided parameters such as: n = sample size, i = sample index <br  />
  Samples generation can be tweaked using parameters such as start_size, end_size, incr.  <br /></td></tr>
@@ -126,6 +128,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:a6588412bb733e9fb10b121de9167272f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to print contents of an int array.  <br /></td></tr>
 <tr class="memitem:a99342d84c8c05510adf7d26dbcd4f6f8" id="r_a99342d84c8c05510adf7d26dbcd4f6f8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a99342d84c8c05510adf7d26dbcd4f6f8">bGenRandArr</a> (int *arr, int length, int range)</td></tr>
 <tr class="memdesc:a99342d84c8c05510adf7d26dbcd4f6f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random unsorted int array.  <br /></td></tr>
+<tr class="memitem:a0e3698ff26a4d06ec0ff0bc2ab0b6967" id="r_a0e3698ff26a4d06ec0ff0bc2ab0b6967"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0e3698ff26a4d06ec0ff0bc2ab0b6967">bGenRandSortedArr</a> (int *arr, int length, int growth)</td></tr>
+<tr class="memdesc:a0e3698ff26a4d06ec0ff0bc2ab0b6967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random sorted int array growing in steps of growth.  <br /></td></tr>
 <tr class="memitem:a115419b2d16b12445bf3343d2269cc95" id="r_a115419b2d16b12445bf3343d2269cc95"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a115419b2d16b12445bf3343d2269cc95">bmalloc</a> (size_t size)</td></tr>
 <tr class="memdesc:a115419b2d16b12445bf3343d2269cc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passthrough function through malloc to collect heap allocation information, behaves same as stdlib malloc.  <br /></td></tr>
 <tr class="memitem:a03ddf9249bd988a413a6322789866e51" id="r_a03ddf9249bd988a413a6322789866e51"><td class="memItemLeft">size_t&#160;</td><td class="memItemRight"><a class="el" href="#a03ddf9249bd988a413a6322789866e51">bGetMallocSize</a> (void *ptr)</td></tr>
@@ -267,7 +271,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 <div class="ttc" id="artbench_8h_html_a8a88c2790f8255a5d5b8c6e2240a9d10"><div class="ttname"><a href="#a8a88c2790f8255a5d5b8c6e2240a9d10">BENCH_STACK_HIGH</a></div><div class="ttdeci">size_t BENCH_STACK_HIGH</div><div class="ttdoc">External variables used to track stack bounds of current measurement, refer to BENCH_STACK_RST and BE...</div></div>
 </div><!-- fragment -->
 <p>Used to reset the stack bounds to begin with the benchmark. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a3">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a3">fact_stack_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a4">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a3">fact_stack_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -296,7 +300,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 <div class="line">        <span class="keywordflow">for</span> (clock_t st = clock(), _once = 1; _once; total += clock() - st, _once = 0)</div>
 </div><!-- fragment -->
 <p>Measures the time required for a code to run within the block averaged over avg_count iterations, also takes an optional argument to add in a value in naming to prevent duplicates in code and differentiate between multiple measurements within the same bench. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a1">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a2">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a1">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a2">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a4">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a3">heap_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a1">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a3">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a1">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a2">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a4">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a3">heap_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -319,8 +323,28 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 </div><!-- fragment -->
 <p>Prints the measurements to stdout or a file as per BENCH_OUT_TO_FILE definition. </p>
 <dl class="section note"><dt>Note</dt><dd>Use the BENCH_EXCLUDE_INDEX flag to exclude the index in output </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a2">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a4">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a2">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a4">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a6">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a5">heap_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a2">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a5">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a2">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a4">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a6">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a5">heap_bench.c</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="a68ad8768c69d0f1956af9bd04373d5cb" name="a68ad8768c69d0f1956af9bd04373d5cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68ad8768c69d0f1956af9bd04373d5cb">&#9670;&#160;</a></span>T_VAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define T_VAL</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">(measure_time_##__VA_ARGS__)</div>
+</div><!-- fragment -->
+<p>Helper macro used to get the time variable generated from a measurement. </p>
 
 </div>
 </div>
@@ -384,6 +408,44 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
     <tr><td class="paramname">range</td><td>The max range of values: [0, range) </td></tr>
   </table>
   </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0e3698ff26a4d06ec0ff0bc2ab0b6967" name="a0e3698ff26a4d06ec0ff0bc2ab0b6967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e3698ff26a4d06ec0ff0bc2ab0b6967">&#9670;&#160;</a></span>bGenRandSortedArr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void bGenRandSortedArr </td>
+          <td>(</td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>arr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>length</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>growth</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generate a random sorted int array growing in steps of growth. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arr</td><td>The array to generate into </td></tr>
+    <tr><td class="paramname">length</td><td>The length of the array </td></tr>
+    <tr><td class="paramname">growth</td><td>The amount of random steps to increase in while generating, [0, growth) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a2">csv_bench.c</a>.</dd>
 </dl>
 
 </div>

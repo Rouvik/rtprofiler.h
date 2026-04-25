@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['library_0',['RTBench - Rouviks Tiny Benchmarking Library',['../index.html',1,'']]]
+  ['examples_3a_0',['Examples:',['../index.html#autotoc_md2',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['macros_0',['Configuration Macros',['../config_macros.html',1,'']]]
+  ['factorial_20recursive_20implementation_3a_0',['Factorial recursive implementation:',['../index.html#autotoc_md4',1,'']]]
 ];

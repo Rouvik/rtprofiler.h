@@ -99,7 +99,45 @@ Usage:</h1>
 <p>Just include <a class="el" href="rtbench_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtbench.h</a> in your main C file with RTBENCH_IMPLEMENTATION defined in a single translation unit (refer examples) and get going!</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Examples:</h1>
-<p>You can find example snippets in the <span class="tt">examples/</span> directory. </p>
+<p>You can find example snippets in the <span class="tt">examples/</span> directory.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+Some tests I did:</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+Factorial recursive implementation:</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> fact(<span class="keywordtype">int</span> n)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> n == 1 ? 1 : n * fact(n - 1);</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+Time:</h3>
+<p><img src="fact_time.png" alt="" class="inline" title="fact_time.png"/>    </p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Stack:</h3>
+<p><img src="fact_stack.png" alt="" class="inline" title="fact_stack.png"/>    </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Bubble Sort:</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> bsort(<span class="keywordtype">int</span> *arr, <span class="keywordtype">int</span> n)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> i, j, t;</div>
+<div class="line">    <span class="keywordflow">for</span> (i = 0; i &lt; n - 1; i++)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">for</span> (j = 0; j &lt; n - i - 1; j++)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">if</span> (arr[j] &lt; arr[j + 1])</div>
+<div class="line">            {</div>
+<div class="line">                t = arr[j];</div>
+<div class="line">                arr[j] = arr[j + 1];</div>
+<div class="line">                arr[j + 1] = t;</div>
+<div class="line">            }</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+Time:</h3>
+<p><img src="bsort_time.png" alt="" class="inline" title="bsort_time.png"/>    </p>
+<blockquote class="doxtable">
+<p>Values plotted in desmos </p>
+</blockquote>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

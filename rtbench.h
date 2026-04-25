@@ -32,6 +32,12 @@
  *
  * <b>BENCH_OUT_AS_CSV</b><br>
  * Enables benchmark output as CSV, read <i><b>examples/csv_bench.c</b></i> for example
+ * 
+ * <b>BENCH_IGNORE_HEADER</b><br>
+ * Ignores printing the header in benchmarks
+ * 
+ * <b>BENCH_EXCLUDE_INDEX</b><br>
+ * Exclude the index field in benchmark output
  */
 
 /**
@@ -50,6 +56,15 @@ void bPrintArr(int *arr, int length);
  * @param range The max range of values: [0, range)
  */
 void bGenRandArr(int *arr, int length, int range);
+
+/**
+ * @brief Generate a random sorted int array growing in steps of growth
+ * 
+ * @param arr The array to generate into
+ * @param length The length of the array
+ * @param growth The amount of random steps to increase in while generating, [0, growth)
+ */
+void bGenRandSortedArr(int *arr, int length, int growth);
 
 /**
  * @brief Passthrough function through malloc to collect heap allocation information, behaves same as stdlib malloc
@@ -147,6 +162,11 @@ extern size_t BENCH_HEAP_CURRENT;
 		for (; _i < (avg_count); _i++)                                                                                                     \
 			for (clock_t st = clock(), _once = 1; _once; total += clock() - st, _once = 0)
 
+/**
+ * @brief Helper macro used to get the time variable generated from a measurement
+ */
+#define T_VAL(...) (measure_time_##__VA_ARGS__)
+
 #ifdef BENCH_OUT_AS_CSV
 #ifdef BENCH_EXCLUDE_INDEX
 #define BENCH_FILE_OUTPUT_FMT "%d,%ld,%ld,%ld\n"
@@ -165,6 +185,11 @@ extern size_t BENCH_HEAP_CURRENT;
 #define BENCH_FILE_OUTPUT_FMT "%d\t%d\t%ld\t%ld\t%ld\n"
 #endif
 /** @endcond */
+#endif
+
+#ifdef BENCH_IGNORE_HEADER
+#undef BENCH_FILE_HEADER
+#define BENCH_FILE_HEADER ""
 #endif
 
 #ifdef BENCH_OUT_TO_FILE
@@ -239,7 +264,7 @@ void bGenRandArr(int *arr, int length, int range)
 	}
 }
 
-void genRandSortedArr(int *arr, int length, int growth)
+void bGenRandSortedArr(int *arr, int length, int growth)
 {
 	srand(time(NULL));
 

@@ -13,12 +13,12 @@ int main()
     BENCH(10, 100000, n *= 10)
     {
         int volatile out;
-        MEASURE_T(100)  // measure the code within the block for 100 iterations and average the time
+        MEASURE_T(100, f1)  // measure the code within the block for 100 iterations and average the time and use tag f1 for identifying the measurement while printing
         {
             out = fact(n);
         }
 
-        PRINT_MEASURE();
+        PRINT_MEASURE(f1);
     }
 
     return 0;
