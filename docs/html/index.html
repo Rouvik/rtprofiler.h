@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>RTBench: RTBench - Rouviks Tiny Benchmarking Library</title>
+<title>rtprofiler.h: RTProfiler - Rouviks Tiny Profiler Library</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,9 +26,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">RTBench
+   <div id="projectname">rtprofiler.h
    </div>
-   <div id="projectbrief">A simple header only performance measurement library for easy low effort benchmarks</div>
+   <div id="projectbrief">A simple header only performance measurement library for easy low effort benchmarks.</div>
   </td>
  </tr>
  </tbody>
@@ -89,32 +89,38 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">RTBench - Rouviks Tiny Benchmarking Library </div></div>
+  <div class="headertitle"><div class="title">RTProfiler - Rouviks Tiny Profiler Library </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
 <p>A simple header only performance measurement library for easy low effort benchmarks.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 Usage:</h1>
-<p>Just include <a class="el" href="rtbench_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtbench.h</a> in your main C file with RTBENCH_IMPLEMENTATION defined in a single translation unit (refer examples) and get going!</p>
+<p>Just include <a class="el" href="rtprofiler_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtprofiler.h</a> in your main C file with RTBENCH_IMPLEMENTATION defined in a single translation unit (refer examples) and get going!</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Explanation:</h1>
+<p>The profiler works by creating a testbench using the <a class="el" href="rtprofiler_8h.html#aef5e118a32909aeb4339d934f7d661e8" title="The main loop to run bench marks over a set of samples, the samples are generated using the system pr...">BENCH(...)</a> macro <a href="./examples/basic_bench.c">see examples/basic_bench.c</a> and then run our code to test within measurements (MEASURE_T) or attach probes to the code (BENCH_HEAP_RST, BENCH_HEAP_MSR, BENCH_STACK_RST, BENCH_STACK_MSR) to get the performance readings off of the code in question. I would highly recommend going through all the <a href="./examples/">examples/</a> to better understand the profiler, its quite simple!</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+Docs:</h1>
+<p>You can find documentation for this header in: <a href="https://rouvik.github.io/rtprofiler.h/">https://rouvik.github.io/rtprofiler.h/</a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Examples:</h1>
 <p>You can find example snippets in the <span class="tt">examples/</span> directory.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Some tests I did:</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Factorial recursive implementation:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> fact(<span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> n == 1 ? 1 : n * fact(n - 1);</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Time:</h3>
 <p><img src="fact_time.png" alt="" class="inline" title="fact_time.png"/>    </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Stack:</h3>
 <p><img src="fact_stack.png" alt="" class="inline" title="fact_stack.png"/>    </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Bubble Sort:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> bsort(<span class="keywordtype">int</span> *arr, <span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
@@ -132,7 +138,7 @@ Bubble Sort:</h2>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Time:</h3>
 <p><img src="bsort_time.png" alt="" class="inline" title="bsort_time.png"/>    </p>
 <blockquote class="doxtable">

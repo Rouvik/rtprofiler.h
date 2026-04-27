@@ -1,4 +1,4 @@
 var files_dup =
 [
-    [ "rtbench.h", "rtbench_8h.html", "rtbench_8h" ]
+    [ "rtprofiler.h", "rtprofiler_8h.html", "rtprofiler_8h" ]
 ];

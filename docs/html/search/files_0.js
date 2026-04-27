@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rtbench_2eh_0',['rtbench.h',['../rtbench_8h.html',1,'']]]
+  ['rtprofiler_2eh_0',['rtprofiler.h',['../rtprofiler_8h.html',1,'']]]
 ];

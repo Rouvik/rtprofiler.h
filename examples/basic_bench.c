@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define RTBENCH_IMPLEMENTATION
+#define RTPROFILER_IMPLEMENTATION
 #include "../rtprofiler.h"
 
 int main()

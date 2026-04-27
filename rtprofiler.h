@@ -1,5 +1,5 @@
 /**
- * @file rtbench.h
+ * @file rtprofiler.h
  * @author Rouvik Maji (majirouvik@gmail.com)
  * @brief A simple header only performance measurement library for easy low effort benchmarks
  * @date 2026-04-24
@@ -14,8 +14,8 @@
  * @example csv_bench.c
  */
 
-#ifndef RTBENCH_INCLUDE
-#define RTBENCH_INCLUDE
+#ifndef RTPROFILER_INCLUDE
+#define RTPROFILER_INCLUDE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 /**
  * @page config_macros Configuration Macros
  *
- * <b>RTBENCH_IMPLEMENTATION</b><br>
+ * <b>RTPROFILER_IMPLEMENTATION</b><br>
  * Must be used only once in a single translation unit to include the main implementation
  *
  * <b>BENCH_OUT_TO_FILE</b><br>
@@ -32,10 +32,10 @@
  *
  * <b>BENCH_OUT_AS_CSV</b><br>
  * Enables benchmark output as CSV, read <i><b>examples/csv_bench.c</b></i> for example
- * 
+ *
  * <b>BENCH_IGNORE_HEADER</b><br>
  * Ignores printing the header in benchmarks
- * 
+ *
  * <b>BENCH_EXCLUDE_INDEX</b><br>
  * Exclude the index field in benchmark output
  */
@@ -59,7 +59,7 @@ void bGenRandArr(int *arr, int length, int range);
 
 /**
  * @brief Generate a random sorted int array growing in steps of growth
- * 
+ *
  * @param arr The array to generate into
  * @param length The length of the array
  * @param growth The amount of random steps to increase in while generating, [0, growth)
@@ -113,26 +113,39 @@ extern size_t BENCH_HEAP_TOTAL;
  */
 extern size_t BENCH_HEAP_CURRENT;
 
+#if defined(__x86_64__)
+#define __BENCH_STACK_RST_READ asm volatile("mov %%rsp, %0" : "=r"(BENCH_STACK_HIGH));
+#define __BENCH_STACK_MSR_READ asm volatile("mov %%rsp, %0" : "=r"(x));
+#elif defined(__i386__)
+#define __BENCH_STACK_RST_READ asm volatile("mov %%esp, %0" : "=r"(BENCH_STACK_HIGH));
+#define __BENCH_STACK_MSR_READ asm volatile("mov %%esp, %0" : "=r"(x));
+#elif defined(__arm__) || defined(__aarch64__)
+#define __BENCH_STACK_RST_READ asm volatile("mov %0, sp" : "=r"(BENCH_STACK_HIGH));
+#define __BENCH_STACK_MSR_READ asm volatile("mov %0, sp" : "=r"(x));
+#else
+#error "Unsupported architecture, if this was a mistake try compiling with __x86_64__ or i386 or __arm__ or __aarch64__ defined"
+#endif
+
 /**
  * @brief Used to reset the stack bounds to begin with the benchmark
  */
-#define BENCH_STACK_RST()                                       \
-	do                                                          \
-	{                                                           \
-		asm volatile("mov %%rsp, %0" : "=r"(BENCH_STACK_HIGH)); \
-		BENCH_STACK_LOW = BENCH_STACK_HIGH;                     \
+#define BENCH_STACK_RST()                   \
+	do                                      \
+	{                                       \
+		__BENCH_STACK_RST_READ              \
+		BENCH_STACK_LOW = BENCH_STACK_HIGH; \
 	} while (0);
 
 /**
  * @brief Used to measure and record the lowest bound of the stack
  */
-#define BENCH_STACK_MSR()                        \
-	do                                           \
-	{                                            \
-		register size_t x = 0;                   \
-		asm volatile("mov %%rsp, %0" : "=r"(x)); \
-		if (BENCH_STACK_LOW > x)                 \
-			BENCH_STACK_LOW = x;                 \
+#define BENCH_STACK_MSR()        \
+	do                           \
+	{                            \
+		register size_t x = 0;   \
+		__BENCH_STACK_MSR_READ   \
+		if (BENCH_STACK_LOW > x) \
+			BENCH_STACK_LOW = x; \
 	} while (0);
 
 /**
@@ -169,20 +182,20 @@ extern size_t BENCH_HEAP_CURRENT;
 
 #ifdef BENCH_OUT_AS_CSV
 #ifdef BENCH_EXCLUDE_INDEX
-#define BENCH_FILE_OUTPUT_FMT "%d,%ld,%ld,%ld\n"
 #define BENCH_FILE_HEADER "n,ticks,stack,heap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d,%lu,%zu,%zu\n"
 #else
-#define BENCH_FILE_OUTPUT_FMT "%d,%d,%ld,%ld,%ld\n"
 #define BENCH_FILE_HEADER "index,n,ticks,stack,heap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d,%d,%lu,%zu,%zu\n"
 #endif
 #else
 /** @cond INTERNAL_MACROS */
 #ifdef BENCH_EXCLUDE_INDEX
 #define BENCH_FILE_HEADER "n\tticks\tstack\theap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d\t%ld\t%ld\t%ld\n"
+#define BENCH_FILE_OUTPUT_FMT "%d\t%lu\t%zu\t%zu\n"
 #else
 #define BENCH_FILE_HEADER "index\tn\tticks\tstack\theap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d\t%d\t%ld\t%ld\t%ld\n"
+#define BENCH_FILE_OUTPUT_FMT "%d\t%d\t%lu\t%zu\t%zu\n"
 #endif
 /** @endcond */
 #endif
@@ -222,6 +235,8 @@ extern size_t BENCH_HEAP_CURRENT;
  * @brief The main loop to run bench marks over a set of samples, the samples are generated using the system provided parameters such as:
  * n = sample size, i = sample index <br>
  * Samples generation can be tweaked using parameters such as start_size, end_size, incr
+ * 
+ * @note The name BENCH simply stands for TESTBENCH, we simply make a testbench and run our code within some MEASUREMENTS and attach probes to it (BENCH_HEAP_RST, BENCH_HEAP_MSR) to get measurements.
  *
  * There is also a BENCH version with file output selected using the BENCH_OUT_TO_FILE definition as BENCH(fname, start_size, end_size, incr)
  * where fname is the filename to output to
@@ -246,7 +261,7 @@ extern size_t BENCH_HEAP_CURRENT;
 
 // -------------------------------- IMPLEMENTATION --------------------------------
 
-#ifdef RTBENCH_IMPLEMENTATION
+#ifdef RTPROFILER_IMPLEMENTATION
 
 void bPrintArr(int *arr, int length)
 {
@@ -318,4 +333,4 @@ size_t BENCH_HEAP_TOTAL, BENCH_HEAP_CURRENT;
 
 #endif
 
-#endif // RTBENCH_INCLUDE
+#endif // RTPROFILER_INCLUDE

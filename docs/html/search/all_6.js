@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['library_0',['RTBench - Rouviks Tiny Benchmarking Library',['../index.html',1,'']]]
+  ['library_0',['RTProfiler - Rouviks Tiny Profiler Library',['../index.html',1,'']]]
 ];

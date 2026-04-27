@@ -24,8 +24,8 @@
 */
 var NAVTREE =
 [
-  [ "RTBench", "index.html", [
-    [ "RTBench - Rouviks Tiny Benchmarking Library", "index.html", "index" ],
+  [ "rtprofiler.h", "index.html", [
+    [ "RTProfiler - Rouviks Tiny Profiler Library", "index.html", "index" ],
     [ "Configuration Macros", "config_macros.html", null ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],

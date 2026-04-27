@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define RTBENCH_IMPLEMENTATION
+#define RTPROFILER_IMPLEMENTATION
 #define BENCH_IGNORE_HEADER // ignore printing the benchmark header
 #include "../rtprofiler.h"
 

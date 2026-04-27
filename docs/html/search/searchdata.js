@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "b",
   3: "b",
   4: "bimpt",
-  5: "bcdefilmrstu"
+  5: "bcdefilmprstu"
 };
 
 var indexSectionNames =

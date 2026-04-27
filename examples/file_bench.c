@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define RTBENCH_IMPLEMENTATION
+#define RTPROFILER_IMPLEMENTATION
 
 // Add the BENCH_OUT_TO_FILE definition to change macros to their file output variant
 #define BENCH_OUT_TO_FILE
