@@ -4,7 +4,7 @@
 
 // Add the BENCH_OUT_TO_FILE definition to change macros to their file output variant
 #define BENCH_OUT_TO_FILE
-#include "../rtbench.h"
+#include "../rtprofiler.h"
 
 void someHeapFunction(int n)
 {

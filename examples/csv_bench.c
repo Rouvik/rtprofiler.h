@@ -6,7 +6,7 @@
 #define BENCH_OUT_TO_FILE
 #define BENCH_OUT_AS_CSV    // outputs in CSV format
 #define BENCH_EXCLUDE_INDEX // exclude the index field, you can now paste the output directly in desmos to compare other fields against n
-#include "../rtbench.h"
+#include "../rtprofiler.h"
 
 void bsort(int *arr, int n)
 {

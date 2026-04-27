@@ -1,4 +1,4 @@
-# RTBench - Rouviks Tiny Benchmarking Library
+# RTProfiler - Rouviks Tiny Profiler Library
 A simple header only performance measurement library for easy low effort benchmarks.
 
 # Usage:
