@@ -2,7 +2,7 @@
 
 #define RTBENCH_IMPLEMENTATION
 #define BENCH_IGNORE_HEADER // ignore printing the benchmark header
-#include "../rtbench.h"
+#include "../rtprofiler.h"
 
 int fact(int n)
 {

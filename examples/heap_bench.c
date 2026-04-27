@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define RTBENCH_IMPLEMENTATION
-#include "../rtbench.h"
+#include "../rtprofiler.h"
 
 void someHeapFunction(int n)
 {
