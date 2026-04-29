@@ -188,7 +188,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
  Samples generation can be tweaked using parameters such as start_size, end_size, incr. </p>
 <dl class="section note"><dt>Note</dt><dd>The name BENCH simply stands for TESTBENCH, we simply make a testbench and run our code within some MEASUREMENTS and attach probes to it (BENCH_HEAP_RST, BENCH_HEAP_MSR) to get measurements.</dd></dl>
 <p>There is also a BENCH version with file output selected using the BENCH_OUT_TO_FILE definition as <a class="el" href="#aef5e118a32909aeb4339d934f7d661e8" title="The main loop to run bench marks over a set of samples, the samples are generated using the system pr...">BENCH(fname, start_size, end_size, incr)</a> where fname is the filename to output to </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a0">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a1">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a0">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a1">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a3">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a2">heap_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a0">basic_bench.c</a>, <a class="el" href="bsearch_bench_8c-example.html#a2">bsearch_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a1">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a0">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a1">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a3">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a2">heap_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -245,7 +245,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 <div class="ttc" id="artprofiler_8h_html_af4a35f8ec9fc5e1cb44ea2d3163a9344"><div class="ttname"><a href="#af4a35f8ec9fc5e1cb44ea2d3163a9344">BENCH_STACK_LOW</a></div><div class="ttdeci">size_t BENCH_STACK_LOW</div><div class="ttdoc">External variables used to track stack bounds of current measurement, refer to BENCH_STACK_RST and BE...</div></div>
 </div><!-- fragment -->
 <p>Used to measure and record the lowest bound of the stack. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a0">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a0">fact_stack_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="bsearch_bench_8c-example.html#a0">bsearch_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a0">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a0">fact_stack_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -272,7 +272,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 <div class="ttc" id="artprofiler_8h_html_a8a88c2790f8255a5d5b8c6e2240a9d10"><div class="ttname"><a href="#a8a88c2790f8255a5d5b8c6e2240a9d10">BENCH_STACK_HIGH</a></div><div class="ttdeci">size_t BENCH_STACK_HIGH</div><div class="ttdoc">External variables used to track stack bounds of current measurement, refer to BENCH_STACK_RST and BE...</div></div>
 </div><!-- fragment -->
 <p>Used to reset the stack bounds to begin with the benchmark. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a4">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a3">fact_stack_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="bsearch_bench_8c-example.html#a4">bsearch_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a4">csv_bench.c</a>, and <a class="el" href="fact_stack_bench_8c-example.html#a3">fact_stack_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -295,13 +295,14 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">clock_t measure_time_##__VA_ARGS__ = 0;                                                                                                \</div>
-<div class="line">for (clock_t total = 0, _avg_out_once = 1, _i = 0; _avg_out_once; measure_time_##__VA_ARGS__ = total / (avg_count), _avg_out_once = 0) \</div>
-<div class="line">    <span class="keywordflow">for</span> (; _i &lt; (avg_count); _i++)                                                                                                     \</div>
-<div class="line">        <span class="keywordflow">for</span> (clock_t st = clock(), _once = 1; _once; total += clock() - st, _once = 0)</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">double</span> measure_time_##__VA_ARGS__ = 0;                                                                                                       \</div>
+<div class="line">__BENCH_TIME_VAR __measure_timespec_st_##__VA_ARGS__, __measure_timespec_end_##__VA_ARGS__;                                                  \</div>
+<div class="line">for (<span class="keywordtype">int</span> _avg_out_once = 1, _i = 0; _avg_out_once; measure_time_##__VA_ARGS__ = measure_time_##__VA_ARGS__ / (avg_count), _avg_out_once = 0) \</div>
+<div class="line">    <span class="keywordflow">for</span> (; _i &lt; (avg_count); _i++)                                                                                                           \</div>
+<div class="line">        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> _once = (__BENCH_GET_TIME(__measure_timespec_st_##__VA_ARGS__), 1); _once; __BENCH_GET_TIME(__measure_timespec_end_##__VA_ARGS__), __bench_get_computed_time(&amp;measure_time_##__VA_ARGS__, &amp;__measure_timespec_st_##__VA_ARGS__, &amp;__measure_timespec_end_##__VA_ARGS__), _once = 0)</div>
 </div><!-- fragment -->
 <p>Measures the time required for a code to run within the block averaged over avg_count iterations, also takes an optional argument to add in a value in naming to prevent duplicates in code and differentiate between multiple measurements within the same bench. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a1">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a3">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a1">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a2">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a4">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a3">heap_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a1">basic_bench.c</a>, <a class="el" href="bsearch_bench_8c-example.html#a3">bsearch_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a3">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a1">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a2">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a4">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a3">heap_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -324,7 +325,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 </div><!-- fragment -->
 <p>Prints the measurements to stdout or a file as per BENCH_OUT_TO_FILE definition. </p>
 <dl class="section note"><dt>Note</dt><dd>Use the BENCH_EXCLUDE_INDEX flag to exclude the index in output </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a2">basic_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a5">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a2">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a4">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a6">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a5">heap_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="basic_bench_8c-example.html#a2">basic_bench.c</a>, <a class="el" href="bsearch_bench_8c-example.html#a5">bsearch_bench.c</a>, <a class="el" href="csv_bench_8c-example.html#a5">csv_bench.c</a>, <a class="el" href="fact_bench_8c-example.html#a2">fact_bench.c</a>, <a class="el" href="fact_stack_bench_8c-example.html#a4">fact_stack_bench.c</a>, <a class="el" href="file_bench_8c-example.html#a6">file_bench.c</a>, and <a class="el" href="heap_bench_8c-example.html#a5">heap_bench.c</a>.</dd>
 </dl>
 
 </div>
@@ -446,7 +447,7 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="csv_bench_8c-example.html#a2">csv_bench.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="bsearch_bench_8c-example.html#a1">bsearch_bench.c</a>, and <a class="el" href="csv_bench_8c-example.html#a2">csv_bench.c</a>.</dd>
 </dl>
 
 </div>

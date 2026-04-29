@@ -5,5 +5,6 @@ var examples =
     [ "fact_stack_bench.c", "fact_stack_bench_8c-example.html", null ],
     [ "heap_bench.c", "heap_bench_8c-example.html", null ],
     [ "file_bench.c", "file_bench_8c-example.html", null ],
-    [ "csv_bench.c", "csv_bench_8c-example.html", null ]
+    [ "csv_bench.c", "csv_bench_8c-example.html", null ],
+    [ "bsearch_bench.c", "bsearch_bench_8c-example.html", null ]
 ];

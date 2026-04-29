@@ -12,6 +12,7 @@
  * @example heap_bench.c
  * @example file_bench.c
  * @example csv_bench.c
+ * @example bsearch_bench.c
  */
 
 #ifndef RTPROFILER_INCLUDE
@@ -20,6 +21,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+/** @cond INTERNAL_MACROS */
+
+// conditional include for windows QueryPerformanceCounter, QueryPerformanceFrequency
+#if defined(_WIN32) || defined(_WIN64)
+
+#define __BENCH_IN_WINDOWS
+
+#include <profileapi.h>
+
+extern LARGE_INTEGER __bench_freq;
+extern int __bench_freq_computed;
+#endif
+
+/** @endcond */
 
 /**
  * @page config_macros Configuration Macros
@@ -33,8 +49,8 @@
  * <b>BENCH_OUT_AS_CSV</b><br>
  * Enables benchmark output as CSV, read <i><b>examples/csv_bench.c</b></i> for example
  *
- * <b>BENCH_IGNORE_HEADER</b><br>
- * Ignores printing the header in benchmarks
+ * <b>BENCH_EXCLUDE_HEADER</b><br>
+ * Excludes printing the header in benchmarks
  *
  * <b>BENCH_EXCLUDE_INDEX</b><br>
  * Exclude the index field in benchmark output
@@ -113,6 +129,42 @@ extern size_t BENCH_HEAP_TOTAL;
  */
 extern size_t BENCH_HEAP_CURRENT;
 
+/** @cond INTERNAL_MACROS */
+#ifdef __BENCH_IN_WINDOWS
+
+/**
+ * @brief Timing variable for storing time windows platform
+ */
+#define __BENCH_TIME_VAR LARGE_INTEGER
+
+/**
+ * @brief How to read the time output in windows
+ */
+#define __BENCH_GET_TIME(var) (QueryPerformanceCounter(&var))
+
+#else
+/**
+ * @brief Timing variable for storing time posix platforms
+ */
+#define __BENCH_TIME_VAR struct timespec
+
+/**
+ * @brief How to read time in posix using clock_gettime, here I'm using monotonic since its the most accurate stopwatch like clock
+ */
+#define __BENCH_GET_TIME(var) (clock_gettime(CLOCK_MONOTONIC, &var))
+#endif
+
+/**
+ * @brief Actually computes the difference of time and adds it in the total variable to be averaged later
+ *
+ * @param total The total time to add to
+ * @param st Starting time
+ * @param end Ending time
+ */
+void __bench_get_computed_time(double *total, __BENCH_TIME_VAR *st, __BENCH_TIME_VAR *end);
+
+/** @endcond */
+
 #if defined(__x86_64__)
 #define __BENCH_STACK_RST_READ asm volatile("mov %%rsp, %0" : "=r"(BENCH_STACK_HIGH));
 #define __BENCH_STACK_MSR_READ asm volatile("mov %%rsp, %0" : "=r"(x));
@@ -169,11 +221,12 @@ extern size_t BENCH_HEAP_CURRENT;
  * also takes an optional argument to add in a value in naming to prevent duplicates in code and differentiate between multiple
  * measurements within the same bench
  */
-#define MEASURE_T(avg_count, ...)                                                                                                          \
-	clock_t measure_time_##__VA_ARGS__ = 0;                                                                                                \
-	for (clock_t total = 0, _avg_out_once = 1, _i = 0; _avg_out_once; measure_time_##__VA_ARGS__ = total / (avg_count), _avg_out_once = 0) \
-		for (; _i < (avg_count); _i++)                                                                                                     \
-			for (clock_t st = clock(), _once = 1; _once; total += clock() - st, _once = 0)
+#define MEASURE_T(avg_count, ...)                                                                                                                \
+	double measure_time_##__VA_ARGS__ = 0;                                                                                                       \
+	__BENCH_TIME_VAR __measure_timespec_st_##__VA_ARGS__, __measure_timespec_end_##__VA_ARGS__;                                                  \
+	for (int _avg_out_once = 1, _i = 0; _avg_out_once; measure_time_##__VA_ARGS__ = measure_time_##__VA_ARGS__ / (avg_count), _avg_out_once = 0) \
+		for (; _i < (avg_count); _i++)                                                                                                           \
+			for (int _once = (__BENCH_GET_TIME(__measure_timespec_st_##__VA_ARGS__), 1); _once; __BENCH_GET_TIME(__measure_timespec_end_##__VA_ARGS__), __bench_get_computed_time(&measure_time_##__VA_ARGS__, &__measure_timespec_st_##__VA_ARGS__, &__measure_timespec_end_##__VA_ARGS__), _once = 0)
 
 /**
  * @brief Helper macro used to get the time variable generated from a measurement
@@ -182,25 +235,25 @@ extern size_t BENCH_HEAP_CURRENT;
 
 #ifdef BENCH_OUT_AS_CSV
 #ifdef BENCH_EXCLUDE_INDEX
-#define BENCH_FILE_HEADER "n,ticks,stack,heap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d,%lu,%zu,%zu\n"
+#define BENCH_FILE_HEADER "n,time(ms),stack,heap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d,%lf,%zu,%zu\n"
 #else
-#define BENCH_FILE_HEADER "index,n,ticks,stack,heap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d,%d,%lu,%zu,%zu\n"
+#define BENCH_FILE_HEADER "index,n,time(ms),stack,heap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d,%d,%lf,%zu,%zu\n"
 #endif
 #else
 /** @cond INTERNAL_MACROS */
 #ifdef BENCH_EXCLUDE_INDEX
-#define BENCH_FILE_HEADER "n\tticks\tstack\theap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d\t%lu\t%zu\t%zu\n"
+#define BENCH_FILE_HEADER "n\t\ttime(ms)\t\tstack\t\theap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d\t\t%lf\t\t%zu\t\t%zu\n"
 #else
-#define BENCH_FILE_HEADER "index\tn\tticks\tstack\theap\n"
-#define BENCH_FILE_OUTPUT_FMT "%d\t%d\t%lu\t%zu\t%zu\n"
+#define BENCH_FILE_HEADER "index\t\tn\t\ttime(ms)\t\tstack\t\theap\n"
+#define BENCH_FILE_OUTPUT_FMT "%d\t\t%d\t\t%lf\t\t%zu\t\t%zu\n"
 #endif
 /** @endcond */
 #endif
 
-#ifdef BENCH_IGNORE_HEADER
+#ifdef BENCH_EXCLUDE_HEADER
 #undef BENCH_FILE_HEADER
 #define BENCH_FILE_HEADER ""
 #endif
@@ -235,7 +288,7 @@ extern size_t BENCH_HEAP_CURRENT;
  * @brief The main loop to run bench marks over a set of samples, the samples are generated using the system provided parameters such as:
  * n = sample size, i = sample index <br>
  * Samples generation can be tweaked using parameters such as start_size, end_size, incr
- * 
+ *
  * @note The name BENCH simply stands for TESTBENCH, we simply make a testbench and run our code within some MEASUREMENTS and attach probes to it (BENCH_HEAP_RST, BENCH_HEAP_MSR) to get measurements.
  *
  * There is also a BENCH version with file output selected using the BENCH_OUT_TO_FILE definition as BENCH(fname, start_size, end_size, incr)
@@ -327,6 +380,30 @@ void bfree(void *ptr)
 	BENCH_HEAP_CURRENT -= *alloc_size;
 	free(alloc_size);
 }
+
+#ifdef __BENCH_IN_WINDOWS
+void __bench_get_computed_time(double *total, __BENCH_TIME_VAR *st, __BENCH_TIME_VAR *end)
+{
+	if (!__bench_freq_computed) // avoiding redundant queries
+	{
+		__bench_freq_computed = 1;
+		QueryPerformanceFrequency(&__bench_freq);
+	}
+
+	*total += ((double)(end->QuadPart - st->QuadPart) * 1e3) / __bench_freq.QuadPart;
+}
+
+LARGE_INTEGER __bench_freq;
+int __bench_freq_computed = 0;
+
+#else
+
+void __bench_get_computed_time(double *total, __BENCH_TIME_VAR *st, __BENCH_TIME_VAR *end)
+{
+	*total += ((double)(end->tv_sec - st->tv_sec) * 1e3) + ((double)(end->tv_nsec - st->tv_nsec) * 1e-6);
+}
+
+#endif
 
 size_t BENCH_STACK_LOW, BENCH_STACK_HIGH;
 size_t BENCH_HEAP_TOTAL, BENCH_HEAP_CURRENT;

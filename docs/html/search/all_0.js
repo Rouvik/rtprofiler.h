@@ -12,7 +12,9 @@ var searchData=
   ['bgenrandarr_9',['bGenRandArr',['../rtprofiler_8h.html#a99342d84c8c05510adf7d26dbcd4f6f8',1,'rtprofiler.h']]],
   ['bgenrandsortedarr_10',['bGenRandSortedArr',['../rtprofiler_8h.html#a0e3698ff26a4d06ec0ff0bc2ab0b6967',1,'rtprofiler.h']]],
   ['bgetmallocsize_11',['bGetMallocSize',['../rtprofiler_8h.html#a03ddf9249bd988a413a6322789866e51',1,'rtprofiler.h']]],
-  ['bmalloc_12',['bmalloc',['../rtprofiler_8h.html#a115419b2d16b12445bf3343d2269cc95',1,'rtprofiler.h']]],
-  ['bprintarr_13',['bPrintArr',['../rtprofiler_8h.html#a6588412bb733e9fb10b121de9167272f',1,'rtprofiler.h']]],
-  ['bubble_20sort_3a_14',['Bubble Sort:',['../index.html#autotoc_md9',1,'']]]
+  ['binary_20search_20examples_20bsearch_5fbench_20c_3a_12',['Binary Search &lt;a href=&quot;./examples/bsearch_bench.c&quot;&gt;./examples/bsearch_bench.c&lt;/a&gt;:',['../index.html#autotoc_md6',1,'']]],
+  ['bmalloc_13',['bmalloc',['../rtprofiler_8h.html#a115419b2d16b12445bf3343d2269cc95',1,'rtprofiler.h']]],
+  ['bprintarr_14',['bPrintArr',['../rtprofiler_8h.html#a6588412bb733e9fb10b121de9167272f',1,'rtprofiler.h']]],
+  ['bsearch_5fbench_20c_3a_15',['Binary Search &lt;a href=&quot;./examples/bsearch_bench.c&quot;&gt;./examples/bsearch_bench.c&lt;/a&gt;:',['../index.html#autotoc_md6',1,'']]],
+  ['bubble_20sort_3a_16',['Bubble Sort:',['../index.html#autotoc_md11',1,'']]]
 ];

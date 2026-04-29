@@ -18,6 +18,15 @@ You can find documentation for this header in: [https://rouvik.github.io/rtprofi
 You can find example snippets in the `examples/` directory.
 
 # Some tests I did:
+## Binary Search [./examples/bsearch_bench.c](./examples/bsearch_bench.c):
+
+### Time:
+![bsearch_time.png](./images/bsearch_time.png)
+
+You can clearly observe the logarithmic trend in binary search.
+
+**`Capturing this level of detail is possible since rtprofiler.h uses nanosecond precision timing in its implementation!`**
+
 ## Factorial recursive implementation:
 ```c
 int fact(int n)

@@ -109,18 +109,25 @@ Examples:</h1>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Some tests I did:</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Binary Search <a href="./examples/bsearch_bench.c">./examples/bsearch_bench.c</a>:</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Time:</h3>
+<p><img src="bsearch_time.png" alt="" class="inline" title="bsearch_time.png"/>    </p>
+<p>You can clearly observe the logarithmic trend in binary search.</p>
+<p><b><span class="tt">Capturing this level of detail is possible since <a class="el" href="rtprofiler_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtprofiler.h</a> uses nanosecond precision timing in its implementation!</span></b></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Factorial recursive implementation:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> fact(<span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> n == 1 ? 1 : n * fact(n - 1);</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Time:</h3>
 <p><img src="fact_time.png" alt="" class="inline" title="fact_time.png"/>    </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Stack:</h3>
 <p><img src="fact_stack.png" alt="" class="inline" title="fact_stack.png"/>    </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 Bubble Sort:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> bsort(<span class="keywordtype">int</span> *arr, <span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
@@ -138,7 +145,7 @@ Bubble Sort:</h2>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Time:</h3>
 <p><img src="bsort_time.png" alt="" class="inline" title="bsort_time.png"/>    </p>
 <blockquote class="doxtable">
