@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['tests_20i_20did_3a_0',['Some tests I did:',['../index.html#autotoc_md5',1,'']]],
-  ['time_3a_1',['Time:',['../index.html#autotoc_md7',1,'Time:'],['../index.html#autotoc_md9',1,'Time:'],['../index.html#autotoc_md12',1,'Time:']]],
-  ['tiny_20profiler_20library_2',['RTProfiler - Rouviks Tiny Profiler Library',['../index.html',1,'']]]
+  ['search_20examples_20bsearch_5fbench_20c_3a_0',['Binary Search &lt;a href=&quot;./examples/bsearch_bench.c&quot;&gt;./examples/bsearch_bench.c&lt;/a&gt;:',['../index.html#autotoc_md7',1,'']]],
+  ['some_20tests_20i_20did_3a_1',['Some tests I did:',['../index.html#autotoc_md6',1,'']]],
+  ['sort_3a_2',['Bubble Sort:',['../index.html#autotoc_md12',1,'']]],
+  ['stack_3a_3',['Stack:',['../index.html#autotoc_md11',1,'']]]
 ];

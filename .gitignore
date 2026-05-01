@@ -5,3 +5,6 @@ bin/
 Makefile
 Doxyfile
 main.c
+
+# Ignore vscode
+.vscode

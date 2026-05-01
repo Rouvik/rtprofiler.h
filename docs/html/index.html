@@ -98,36 +98,43 @@ $(function(){initNavTree('index.html','',''); });
 Usage:</h1>
 <p>Just include <a class="el" href="rtprofiler_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtprofiler.h</a> in your main C file with RTBENCH_IMPLEMENTATION defined in a single translation unit (refer examples) and get going!</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+How it works?</h1>
+<p>The timing is done using native Windows <span class="tt">QueryPerformanceCounter</span> and POSIX <span class="tt">clock_gettime</span> to read time in nano seconds over a loop block and compute the difference to get timing.</p>
+<p>For stack however it is an <b>approximation</b> based on the stack pointer <span class="tt">rsp, esp, sp</span> on respective platforms <b>ASSUMING STACK GROWS DOWNWARD</b>. But is good enough to determing growth rate in memory and plot for analysis.</p>
+<p>The macro <span class="tt"><a class="el" href="rtprofiler_8h.html#ad8604d33af2041ba5afd7cbc1d71c527" title="Used to measure and record the lowest bound of the stack.">BENCH_STACK_MSR</a></span> is where stack pointer in a function is picked on each call and compared with existing measurement to keep the max difference hence tracking the max stack depth during analysis. Hence this function must be called in the deepest function call in a recursive implementation, if branching exists then called multiple times to track the deepest stack depth during analysis and get the closest accurate result to real stack depth.</p>
+<p>For heap, <span class="tt"><a class="el" href="rtprofiler_8h.html#a115419b2d16b12445bf3343d2269cc95" title="Passthrough function through malloc to collect heap allocation information, behaves same as stdlib ma...">bmalloc</a>, <a class="el" href="rtprofiler_8h.html#a4e80ea137f5d9dacff9a61ffc13a8022" title="Passthrough function through realloc with correct checks to mimic realloc behaviour to collect heap a...">brealloc</a>, <a class="el" href="rtprofiler_8h.html#a4745e7ee8f3a628bf1c594ea601ef947" title="Passthrough function through calloc with correct checks to mimic calloc behaviour to collect heap all...">bcalloc</a>, <a class="el" href="rtprofiler_8h.html#a8c3cf20fd0be2d8c3c1427653e640bf6" title="Passthrough function through free to collect heap allocation information, behaves same as stdlib free...">bfree</a></span> act as hooks to the C <span class="tt">malloc, realloc, calloc, free</span> heap allocation functions and track the allocated memory accurately.</p>
+<p>The macros <span class="tt"><a class="el" href="rtprofiler_8h.html#acfeb7ea065f8386c884c283828a1f485" title="Used to reset the stack bounds to begin with the benchmark.">BENCH_STACK_RST</a>, <a class="el" href="rtprofiler_8h.html#aeca372ad7ffc46943c321fd6e399eaf3" title="Used to reset the heap bounds to begin with the benchmark.">BENCH_HEAP_RST</a></span> simply reset the internal structures to start tracking.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Explanation:</h1>
 <p>The profiler works by creating a testbench using the <a class="el" href="rtprofiler_8h.html#aef5e118a32909aeb4339d934f7d661e8" title="The main loop to run bench marks over a set of samples, the samples are generated using the system pr...">BENCH(...)</a> macro <a href="./examples/basic_bench.c">see examples/basic_bench.c</a> and then run our code to test within measurements (MEASURE_T) or attach probes to the code (BENCH_HEAP_RST, BENCH_HEAP_MSR, BENCH_STACK_RST, BENCH_STACK_MSR) to get the performance readings off of the code in question. I would highly recommend going through all the <a href="./examples/">examples/</a> to better understand the profiler, its quite simple!</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Docs:</h1>
 <p>You can find documentation for this header in: <a href="https://rouvik.github.io/rtprofiler.h/">https://rouvik.github.io/rtprofiler.h/</a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Examples:</h1>
 <p>You can find example snippets in the <span class="tt">examples/</span> directory.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Some tests I did:</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Binary Search <a href="./examples/bsearch_bench.c">./examples/bsearch_bench.c</a>:</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Time:</h3>
 <p><img src="bsearch_time.png" alt="" class="inline" title="bsearch_time.png"/>    </p>
 <p>You can clearly observe the logarithmic trend in binary search.</p>
 <p><b><span class="tt">Capturing this level of detail is possible since <a class="el" href="rtprofiler_8h.html" title="A simple header only performance measurement library for easy low effort benchmarks.">rtprofiler.h</a> uses nanosecond precision timing in its implementation!</span></b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Factorial recursive implementation:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> fact(<span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> n == 1 ? 1 : n * fact(n - 1);</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Time:</h3>
 <p><img src="fact_time.png" alt="" class="inline" title="fact_time.png"/>    </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 Stack:</h3>
 <p><img src="fact_stack.png" alt="" class="inline" title="fact_stack.png"/>    </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Bubble Sort:</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> bsort(<span class="keywordtype">int</span> *arr, <span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
@@ -145,7 +152,7 @@ Bubble Sort:</h2>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 Time:</h3>
 <p><img src="bsort_time.png" alt="" class="inline" title="bsort_time.png"/>    </p>
 <blockquote class="doxtable">

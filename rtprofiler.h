@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <errno.h>
 
 /** @cond INTERNAL_MACROS */
 
@@ -91,6 +94,33 @@ void bGenRandSortedArr(int *arr, int length, int growth);
 void *bmalloc(size_t size);
 
 /**
+ * @brief Passthrough function through realloc with correct checks to mimic realloc behaviour to collect heap allocation information, behaves same as stdlib realloc
+ * 
+ * @warning The ptr to this function must be used with bmalloc otherwise will result in undefined behaviour
+ * 
+ * @param ptr The original pointer ALLOCATED WITH bmalloc to realloc
+ * @param size The size of memory to reallocate in bytes
+ * @return void* The pointer to reallocated memory
+ */
+void *brealloc(void *ptr, size_t size);
+
+/**
+ * @brief Passthrough function through calloc with correct checks to mimic calloc behaviour to collect heap allocation information, behaves same as stdlib calloc
+ * 
+ * @param n The number of elements to initialise
+ * @param size The size of each element
+ * @return void* The 0 initialised pointer to allocated memory
+ */
+void *bcalloc(size_t n, size_t size);
+
+/**
+ * @brief Passthrough function through free to collect heap allocation information, behaves same as stdlib free
+ *
+ * @param ptr The pointer to free
+ */
+void bfree(void *ptr);
+
+/**
  * @brief Returns the size of memory allocated by bmalloc
  * @note This function is NULL safe
  * @warning This function works only with bmalloc, if used with normal malloc and stack pointers, it will result in invalid values
@@ -99,13 +129,6 @@ void *bmalloc(size_t size);
  * @return size_t The size of the memory allocated in bytes
  */
 size_t bGetMallocSize(void *ptr);
-
-/**
- * @brief Passthrough function through free to collect heap allocation information, behaves same as stdlib free
- *
- * @param ptr The pointer to free
- */
-void bfree(void *ptr);
 
 /**
  * @brief External variables used to track stack bounds of current measurement, refer to BENCH_STACK_RST and BENCH_STACK_MSR
@@ -344,29 +367,88 @@ void bGenRandSortedArr(int *arr, int length, int growth)
 	}
 }
 
+/** @cond INTERNAL_MACRO */
+
+typedef union bmemmeta
+{
+	size_t size;
+	max_align_t _; // keeping this in union to make sure this struct size is a multiple of max_align_t and always aligned on all systems
+} bmemmeta_t;
+
+/** @endcond */
+
 void *bmalloc(size_t size)
 {
-	size_t *ptr = malloc(size + sizeof(size_t));
+	bmemmeta_t *ptr = malloc(size + sizeof(bmemmeta_t));
 	if (!ptr)
 	{
 		return NULL;
 	}
 
-	*ptr = size;
+	ptr->size = size;
 	BENCH_HEAP_TOTAL += size;
 	BENCH_HEAP_CURRENT += size;
 	return ptr + 1;
 }
 
-size_t bGetMallocSize(void *ptr)
+void *brealloc(void *ptr, size_t size)
 {
 	if (!ptr)
 	{
-		return 0;
+		return bmalloc(size);
 	}
 
-	size_t *size = (size_t *)ptr - 1;
-	return *size;
+	if (size == 0)
+	{
+		bfree(ptr);
+		return NULL;
+	}
+	
+	bmemmeta_t *oldMetaPtr = (bmemmeta_t *)ptr - 1;
+	size_t oldSize = oldMetaPtr->size;
+
+	bmemmeta_t *newptr = realloc(oldMetaPtr, size + sizeof(bmemmeta_t));
+	if (!newptr)
+	{
+		return NULL;
+	}
+
+	newptr->size = size;
+	BENCH_HEAP_TOTAL += size;
+	BENCH_HEAP_CURRENT += size;
+	BENCH_HEAP_CURRENT -= oldSize;
+
+	return newptr + 1;
+}
+
+void *bcalloc(size_t n, size_t size)
+{
+	if (size != 0 && n > SIZE_MAX / size)	// overflow
+	{
+		errno = ENOMEM;
+		return NULL;
+	}
+	
+	size_t mul = n * size;
+	size_t completeSize = mul + sizeof(bmemmeta_t);
+
+	if (completeSize < mul)	// overflow
+	{
+		errno = ENOMEM;
+		return NULL;
+	}
+	
+	bmemmeta_t *meta = calloc(1, completeSize);
+	if (!meta)
+	{
+		return NULL;
+	}
+	
+	meta->size = mul;
+	BENCH_HEAP_TOTAL += mul;
+	BENCH_HEAP_CURRENT += mul;
+
+	return meta + 1;
 }
 
 void bfree(void *ptr)
@@ -376,9 +458,20 @@ void bfree(void *ptr)
 		return;
 	}
 
-	size_t *alloc_size = (size_t *)ptr - 1;
-	BENCH_HEAP_CURRENT -= *alloc_size;
-	free(alloc_size);
+	bmemmeta_t *meta = (bmemmeta_t *)ptr - 1;
+	BENCH_HEAP_CURRENT -= meta->size;
+	free(meta);
+}
+
+size_t bGetMallocSize(void *ptr)
+{
+	if (!ptr)
+	{
+		return 0;
+	}
+
+	bmemmeta_t *meta = (bmemmeta_t *)ptr - 1;
+	return meta->size;
 }
 
 #ifdef __BENCH_IN_WINDOWS

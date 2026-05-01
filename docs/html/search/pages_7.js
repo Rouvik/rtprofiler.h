@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['macros_0',['Configuration Macros',['../config_macros.html',1,'']]]
+  ['library_0',['RTProfiler - Rouviks Tiny Profiler Library',['../index.html',1,'']]]
 ];

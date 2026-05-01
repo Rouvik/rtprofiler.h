@@ -5,6 +5,17 @@ A simple header only performance measurement library for easy low effort benchma
 Just include rtprofiler.h in your main C file with RTBENCH_IMPLEMENTATION defined in a single translation unit (refer examples)
 and get going!
 
+# How it works?
+The timing is done using native Windows `QueryPerformanceCounter` and POSIX `clock_gettime` to read time in nano seconds over a loop block and compute the difference to get timing.
+
+For stack however it is an **approximation** based on the stack pointer `rsp, esp, sp` on respective platforms **ASSUMING STACK GROWS DOWNWARD**. But is good enough to determing growth rate in memory and plot for analysis.
+
+The macro `BENCH_STACK_MSR` is where stack pointer in a function is picked on each call and compared with existing measurement to keep the max difference hence tracking the max stack depth during analysis. Hence this function must be called in the deepest function call in a recursive implementation, if branching exists then called multiple times to track the deepest stack depth during analysis and get the closest accurate result to real stack depth.
+
+For heap, `bmalloc, brealloc, bcalloc, bfree` act as hooks to the C `malloc, realloc, calloc, free` heap allocation functions and track the allocated memory accurately.
+
+The macros `BENCH_STACK_RST, BENCH_HEAP_RST` simply reset the internal structures to start tracking.
+
 # Explanation:
 The profiler works by creating a testbench using the BENCH(...) macro [see examples/basic_bench.c](./examples/basic_bench.c) and then run our code to test within
 measurements (MEASURE_T) or attach probes to the code (BENCH_HEAP_RST, BENCH_HEAP_MSR, BENCH_STACK_RST, BENCH_STACK_MSR) to get the performance readings off of

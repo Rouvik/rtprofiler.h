@@ -98,6 +98,9 @@ $(function(){initNavTree('rtprofiler_8h.html','',''); });
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
 </div>
 <p><a href="rtprofiler_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -132,10 +135,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:a0e3698ff26a4d06ec0ff0bc2ab0b6967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random sorted int array growing in steps of growth.  <br /></td></tr>
 <tr class="memitem:a115419b2d16b12445bf3343d2269cc95" id="r_a115419b2d16b12445bf3343d2269cc95"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a115419b2d16b12445bf3343d2269cc95">bmalloc</a> (size_t size)</td></tr>
 <tr class="memdesc:a115419b2d16b12445bf3343d2269cc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passthrough function through malloc to collect heap allocation information, behaves same as stdlib malloc.  <br /></td></tr>
-<tr class="memitem:a03ddf9249bd988a413a6322789866e51" id="r_a03ddf9249bd988a413a6322789866e51"><td class="memItemLeft">size_t&#160;</td><td class="memItemRight"><a class="el" href="#a03ddf9249bd988a413a6322789866e51">bGetMallocSize</a> (void *ptr)</td></tr>
-<tr class="memdesc:a03ddf9249bd988a413a6322789866e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of memory allocated by bmalloc.  <br /></td></tr>
+<tr class="memitem:a4e80ea137f5d9dacff9a61ffc13a8022" id="r_a4e80ea137f5d9dacff9a61ffc13a8022"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a4e80ea137f5d9dacff9a61ffc13a8022">brealloc</a> (void *ptr, size_t size)</td></tr>
+<tr class="memdesc:a4e80ea137f5d9dacff9a61ffc13a8022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passthrough function through realloc with correct checks to mimic realloc behaviour to collect heap allocation information, behaves same as stdlib realloc.  <br /></td></tr>
+<tr class="memitem:a4745e7ee8f3a628bf1c594ea601ef947" id="r_a4745e7ee8f3a628bf1c594ea601ef947"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a4745e7ee8f3a628bf1c594ea601ef947">bcalloc</a> (size_t n, size_t size)</td></tr>
+<tr class="memdesc:a4745e7ee8f3a628bf1c594ea601ef947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passthrough function through calloc with correct checks to mimic calloc behaviour to collect heap allocation information, behaves same as stdlib calloc.  <br /></td></tr>
 <tr class="memitem:a8c3cf20fd0be2d8c3c1427653e640bf6" id="r_a8c3cf20fd0be2d8c3c1427653e640bf6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8c3cf20fd0be2d8c3c1427653e640bf6">bfree</a> (void *ptr)</td></tr>
 <tr class="memdesc:a8c3cf20fd0be2d8c3c1427653e640bf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passthrough function through free to collect heap allocation information, behaves same as stdlib free.  <br /></td></tr>
+<tr class="memitem:a03ddf9249bd988a413a6322789866e51" id="r_a03ddf9249bd988a413a6322789866e51"><td class="memItemLeft">size_t&#160;</td><td class="memItemRight"><a class="el" href="#a03ddf9249bd988a413a6322789866e51">bGetMallocSize</a> (void *ptr)</td></tr>
+<tr class="memdesc:a03ddf9249bd988a413a6322789866e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of memory allocated by bmalloc.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -351,6 +358,37 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a4745e7ee8f3a628bf1c594ea601ef947" name="a4745e7ee8f3a628bf1c594ea601ef947"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4745e7ee8f3a628bf1c594ea601ef947">&#9670;&#160;</a></span>bcalloc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * bcalloc </td>
+          <td>(</td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Passthrough function through calloc with correct checks to mimic calloc behaviour to collect heap allocation information, behaves same as stdlib calloc. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>The number of elements to initialise </td></tr>
+    <tr><td class="paramname">size</td><td>The size of each element </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void* The 0 initialised pointer to allocated memory </dd></dl>
+
+</div>
+</div>
 <a id="a8c3cf20fd0be2d8c3c1427653e640bf6" name="a8c3cf20fd0be2d8c3c1427653e640bf6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8c3cf20fd0be2d8c3c1427653e640bf6">&#9670;&#160;</a></span>bfree()</h2>
 
@@ -537,6 +575,38 @@ size_t&#160;</td><td class="memItemRight"><b>BENCH_HEAP_CURRENT</b></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a4e80ea137f5d9dacff9a61ffc13a8022" name="a4e80ea137f5d9dacff9a61ffc13a8022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e80ea137f5d9dacff9a61ffc13a8022">&#9670;&#160;</a></span>brealloc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * brealloc </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Passthrough function through realloc with correct checks to mimic realloc behaviour to collect heap allocation information, behaves same as stdlib realloc. </p>
+<dl class="section warning"><dt>Warning</dt><dd>The ptr to this function must be used with bmalloc otherwise will result in undefined behaviour</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptr</td><td>The original pointer ALLOCATED WITH bmalloc to realloc </td></tr>
+    <tr><td class="paramname">size</td><td>The size of memory to reallocate in bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void* The pointer to reallocated memory </dd></dl>
 
 </div>
 </div>
